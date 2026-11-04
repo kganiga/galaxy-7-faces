@@ -7,8 +7,8 @@
     <string name="cfg_date">Show date</string>
     <string name="cfg_heartbeat">Heartbeat animation</string>
     <string name="cfg_rain">Rain animation</string>
-    <string name="cfg_levels">Show Low / Med / High on</string>
-    <string name="level_off">No slot</string>
+    <string name="cfg_levels">Stress level words on</string>
+    <string name="level_off">None</string>
 
     <!-- Complication slots -->
     <string name="slot_left">Left</string>

@@ -99,17 +99,20 @@ TYPES = {
     "bottom": "RANGED_VALUE GOAL_PROGRESS SHORT_TEXT LONG_TEXT MONOCHROMATIC_IMAGE EMPTY",
     "round":  "RANGED_VALUE GOAL_PROGRESS SHORT_TEXT MONOCHROMATIC_IMAGE SMALL_IMAGE EMPTY",
 }
-TEXT_SIZE = {"side": 30, "bottom": 30, "round": 17}
+TEXT_SIZE = {"side": 30, "bottom": 30, "round": 14}
+WORD_SIZE = {"side": 24, "bottom": 28, "round": 12}   # level words are longer than numbers
 
-# "Low/Medium/High words" setting: which slot turns 0-100 style values into words.
-LEVEL_OPTIONS = [("off", "level_off")] + [(f"s{s[0]}", s[1]) for s in SLOTS]
-LEVELS = [(0.70, "level_high"), (0.35, "level_medium")]   # >= 70% High, >= 35% Medium, else Low
+# "Stress level words" setting: which slot turns its min-max value into Samsung-style
+# stress words. Samsung shows four levels: Relaxed, Low, Medium, High. The bands below are
+# even quarters of the range (our assumption, Samsung doesn't publish its cut-offs).
+LEVEL_OPTIONS = [("off", "level_off", "lvl_off")] + [(f"s{s[0]}", s[1], f"lvl_s{s[0]}") for s in SLOTS]
+LEVELS = [(0.75, "level_high"), (0.50, "level_medium"), (0.25, "level_low")]   # else Relaxed
 
 RANGE = "([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])"
 GOAL = "[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]"
 
 # Words shown on the face itself (not settings). Kept English: WFF Templates take literals.
-WORDS = {"level_high": "HIGH", "level_medium": "MED", "level_low": "LOW"}
+WORDS = {"level_high": "HIGH", "level_medium": "MEDIUM", "level_low": "LOW", "level_relaxed": "RELAXED"}
 
 
 def ind(s, n):
@@ -146,21 +149,21 @@ def value_text(kind, x, y, w, h, frac_expr, value_expr):
 
 
 def level_text(kind, x, y, w, h, frac_expr):
-    sz = TEXT_SIZE[kind]
+    sz = WORD_SIZE[kind]
     exprs = "".join(f'    <Expression name="lv{i}">{frac_expr} &gt;= {t}</Expression>\n'
                     for i, (t, _) in enumerate(LEVELS))
     cmps = "".join('  <Compare expression="lv%d">\n' % i
                    + ind(text_part(x, y, w, h, WORDS[word], sz), 4) + '  </Compare>\n'
                    for i, (_, word) in enumerate(LEVELS))
     return ('<Condition>\n  <Expressions>\n' + exprs + '  </Expressions>\n' + cmps +
-            '  <Default>\n' + ind(text_part(x, y, w, h, WORDS["level_low"], sz), 4) +
+            '  <Default>\n' + ind(text_part(x, y, w, h, WORDS["level_relaxed"], sz), 4) +
             '  </Default>\n</Condition>\n')
 
 
 def ranged_text(slot_id, kind, x, y, w, h, frac_expr, value_expr):
     """Number by default; Low/Medium/High when the user picked this slot in settings."""
     opts = []
-    for oid, _ in LEVEL_OPTIONS:
+    for oid, _, _ in LEVEL_OPTIONS:
         body = (level_text(kind, x, y, w, h, frac_expr) if oid == f"s{slot_id}"
                 else value_text(kind, x, y, w, h, frac_expr, value_expr))
         opts.append(f'  <ListOption id="{oid}">\n' + ind(body, 4) + '  </ListOption>\n')
@@ -206,7 +209,7 @@ def image(x, y, w, h, src, tint=True):
 def progress_content(slot_id, kind, frac_expr, value_expr):
     W, H = SIZES[kind]
     if kind == "round":
-        return ring(W, frac_expr) + ranged_text(slot_id, kind, 6, 19, W - 12, 22, frac_expr, value_expr)
+        return ring(W, frac_expr) + ranged_text(slot_id, kind, 4, 19, W - 8, 22, frac_expr, value_expr)
     bw = 64 if kind == "side" else W - 60
     return (ranged_text(slot_id, kind, 0, 0, W, 36, frac_expr, value_expr)
             + bar((W - bw) // 2, 39, bw, 5, frac_expr))
@@ -408,7 +411,8 @@ def rain_layer():
 def user_configs():
     colors = "".join(f'<ColorOption id="{i}" displayName="{name}" colors="{" ".join(cols)}"/>\n'
                      for i, (_, name, cols) in enumerate(THEMES))
-    levels = "".join(f'<ListOption id="{oid}" displayName="{name}"/>\n' for oid, name in LEVEL_OPTIONS)
+    levels = "".join(f'<ListOption id="{oid}" displayName="{name}" icon="{icon}"/>\n'
+                     for oid, name, icon in LEVEL_OPTIONS)
     return ('<UserConfigurations>\n'
             '  <ColorConfiguration id="theme" displayName="cfg_theme" defaultValue="0">\n'
             + ind(colors, 4) +

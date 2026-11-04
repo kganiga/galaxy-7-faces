@@ -22,12 +22,12 @@
     <BooleanConfiguration id="heartbeat" displayName="cfg_heartbeat" defaultValue="TRUE"/>
     <BooleanConfiguration id="rainFx" displayName="cfg_rain" defaultValue="TRUE"/>
     <ListConfiguration id="levelSlot" displayName="cfg_levels" defaultValue="off">
-      <ListOption id="off" displayName="level_off"/>
-      <ListOption id="s0" displayName="slot_left"/>
-      <ListOption id="s1" displayName="slot_right"/>
-      <ListOption id="s2" displayName="slot_bottom"/>
-      <ListOption id="s3" displayName="slot_bottom_left"/>
-      <ListOption id="s4" displayName="slot_bottom_right"/>
+      <ListOption id="off" displayName="level_off" icon="lvl_off"/>
+      <ListOption id="s0" displayName="slot_left" icon="lvl_s0"/>
+      <ListOption id="s1" displayName="slot_right" icon="lvl_s1"/>
+      <ListOption id="s2" displayName="slot_bottom" icon="lvl_s2"/>
+      <ListOption id="s3" displayName="slot_bottom_left" icon="lvl_s3"/>
+      <ListOption id="s4" displayName="slot_bottom_right" icon="lvl_s4"/>
     </ListConfiguration>
   </UserConfigurations>
   <BitmapFonts>
@@ -264,27 +264,35 @@
             <ListOption id="s0">
               <Condition>
                 <Expressions>
-                  <Expression name="lv0">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.7</Expression>
-                  <Expression name="lv1">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.35</Expression>
+                  <Expression name="lv0">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.75</Expression>
+                  <Expression name="lv1">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.5</Expression>
+                  <Expression name="lv2">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.25</Expression>
                 </Expressions>
                 <Compare expression="lv0">
                   <PartText x="0" y="0" width="124" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">HIGH</Font>
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">HIGH</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Compare expression="lv1">
                   <PartText x="0" y="0" width="124" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">MED</Font>
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">MEDIUM</Font>
+                    </Text>
+                  </PartText>
+                </Compare>
+                <Compare expression="lv2">
+                  <PartText x="0" y="0" width="124" height="36">
+                    <Text align="CENTER" ellipsis="TRUE">
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">LOW</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
                   <PartText x="0" y="0" width="124" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">LOW</Font>
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">RELAXED</Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -413,27 +421,35 @@
             <ListOption id="s0">
               <Condition>
                 <Expressions>
-                  <Expression name="lv0">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.7</Expression>
-                  <Expression name="lv1">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.35</Expression>
+                  <Expression name="lv0">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.75</Expression>
+                  <Expression name="lv1">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.5</Expression>
+                  <Expression name="lv2">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.25</Expression>
                 </Expressions>
                 <Compare expression="lv0">
                   <PartText x="0" y="0" width="124" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">HIGH</Font>
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">HIGH</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Compare expression="lv1">
                   <PartText x="0" y="0" width="124" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">MED</Font>
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">MEDIUM</Font>
+                    </Text>
+                  </PartText>
+                </Compare>
+                <Compare expression="lv2">
+                  <PartText x="0" y="0" width="124" height="36">
+                    <Text align="CENTER" ellipsis="TRUE">
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">LOW</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
                   <PartText x="0" y="0" width="124" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">LOW</Font>
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">RELAXED</Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -606,27 +622,35 @@
             <ListOption id="s1">
               <Condition>
                 <Expressions>
-                  <Expression name="lv0">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.7</Expression>
-                  <Expression name="lv1">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.35</Expression>
+                  <Expression name="lv0">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.75</Expression>
+                  <Expression name="lv1">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.5</Expression>
+                  <Expression name="lv2">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.25</Expression>
                 </Expressions>
                 <Compare expression="lv0">
                   <PartText x="0" y="0" width="124" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">HIGH</Font>
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">HIGH</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Compare expression="lv1">
                   <PartText x="0" y="0" width="124" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">MED</Font>
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">MEDIUM</Font>
+                    </Text>
+                  </PartText>
+                </Compare>
+                <Compare expression="lv2">
+                  <PartText x="0" y="0" width="124" height="36">
+                    <Text align="CENTER" ellipsis="TRUE">
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">LOW</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
                   <PartText x="0" y="0" width="124" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">LOW</Font>
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">RELAXED</Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -755,27 +779,35 @@
             <ListOption id="s1">
               <Condition>
                 <Expressions>
-                  <Expression name="lv0">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.7</Expression>
-                  <Expression name="lv1">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.35</Expression>
+                  <Expression name="lv0">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.75</Expression>
+                  <Expression name="lv1">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.5</Expression>
+                  <Expression name="lv2">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.25</Expression>
                 </Expressions>
                 <Compare expression="lv0">
                   <PartText x="0" y="0" width="124" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">HIGH</Font>
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">HIGH</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Compare expression="lv1">
                   <PartText x="0" y="0" width="124" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">MED</Font>
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">MEDIUM</Font>
+                    </Text>
+                  </PartText>
+                </Compare>
+                <Compare expression="lv2">
+                  <PartText x="0" y="0" width="124" height="36">
+                    <Text align="CENTER" ellipsis="TRUE">
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">LOW</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
                   <PartText x="0" y="0" width="124" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">LOW</Font>
+                      <Font family="fredoka_bold" size="24" color="[CONFIGURATION.theme.2]">RELAXED</Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -948,27 +980,35 @@
             <ListOption id="s2">
               <Condition>
                 <Expressions>
-                  <Expression name="lv0">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.7</Expression>
-                  <Expression name="lv1">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.35</Expression>
+                  <Expression name="lv0">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.75</Expression>
+                  <Expression name="lv1">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.5</Expression>
+                  <Expression name="lv2">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.25</Expression>
                 </Expressions>
                 <Compare expression="lv0">
                   <PartText x="0" y="0" width="170" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">HIGH</Font>
+                      <Font family="fredoka_bold" size="28" color="[CONFIGURATION.theme.2]">HIGH</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Compare expression="lv1">
                   <PartText x="0" y="0" width="170" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">MED</Font>
+                      <Font family="fredoka_bold" size="28" color="[CONFIGURATION.theme.2]">MEDIUM</Font>
+                    </Text>
+                  </PartText>
+                </Compare>
+                <Compare expression="lv2">
+                  <PartText x="0" y="0" width="170" height="36">
+                    <Text align="CENTER" ellipsis="TRUE">
+                      <Font family="fredoka_bold" size="28" color="[CONFIGURATION.theme.2]">LOW</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
                   <PartText x="0" y="0" width="170" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">LOW</Font>
+                      <Font family="fredoka_bold" size="28" color="[CONFIGURATION.theme.2]">RELAXED</Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1097,27 +1137,35 @@
             <ListOption id="s2">
               <Condition>
                 <Expressions>
-                  <Expression name="lv0">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.7</Expression>
-                  <Expression name="lv1">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.35</Expression>
+                  <Expression name="lv0">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.75</Expression>
+                  <Expression name="lv1">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.5</Expression>
+                  <Expression name="lv2">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.25</Expression>
                 </Expressions>
                 <Compare expression="lv0">
                   <PartText x="0" y="0" width="170" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">HIGH</Font>
+                      <Font family="fredoka_bold" size="28" color="[CONFIGURATION.theme.2]">HIGH</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Compare expression="lv1">
                   <PartText x="0" y="0" width="170" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">MED</Font>
+                      <Font family="fredoka_bold" size="28" color="[CONFIGURATION.theme.2]">MEDIUM</Font>
+                    </Text>
+                  </PartText>
+                </Compare>
+                <Compare expression="lv2">
+                  <PartText x="0" y="0" width="170" height="36">
+                    <Text align="CENTER" ellipsis="TRUE">
+                      <Font family="fredoka_bold" size="28" color="[CONFIGURATION.theme.2]">LOW</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
                   <PartText x="0" y="0" width="170" height="36">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="30" color="[CONFIGURATION.theme.2]">LOW</Font>
+                      <Font family="fredoka_bold" size="28" color="[CONFIGURATION.theme.2]">RELAXED</Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1311,16 +1359,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1332,16 +1380,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1353,16 +1401,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1374,16 +1422,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1392,27 +1440,35 @@
             <ListOption id="s3">
               <Condition>
                 <Expressions>
-                  <Expression name="lv0">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.7</Expression>
-                  <Expression name="lv1">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.35</Expression>
+                  <Expression name="lv0">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.75</Expression>
+                  <Expression name="lv1">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.5</Expression>
+                  <Expression name="lv2">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.25</Expression>
                 </Expressions>
                 <Compare expression="lv0">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]">HIGH</Font>
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">HIGH</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Compare expression="lv1">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]">MED</Font>
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">MEDIUM</Font>
+                    </Text>
+                  </PartText>
+                </Compare>
+                <Compare expression="lv2">
+                  <PartText x="4" y="19" width="52" height="22">
+                    <Text align="CENTER" ellipsis="TRUE">
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">LOW</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]">LOW</Font>
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">RELAXED</Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1424,16 +1480,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1460,16 +1516,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1481,16 +1537,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1502,16 +1558,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1523,16 +1579,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1541,27 +1597,35 @@
             <ListOption id="s3">
               <Condition>
                 <Expressions>
-                  <Expression name="lv0">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.7</Expression>
-                  <Expression name="lv1">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.35</Expression>
+                  <Expression name="lv0">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.75</Expression>
+                  <Expression name="lv1">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.5</Expression>
+                  <Expression name="lv2">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.25</Expression>
                 </Expressions>
                 <Compare expression="lv0">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]">HIGH</Font>
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">HIGH</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Compare expression="lv1">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]">MED</Font>
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">MEDIUM</Font>
+                    </Text>
+                  </PartText>
+                </Compare>
+                <Compare expression="lv2">
+                  <PartText x="4" y="19" width="52" height="22">
+                    <Text align="CENTER" ellipsis="TRUE">
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">LOW</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]">LOW</Font>
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">RELAXED</Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1573,16 +1637,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1597,7 +1661,7 @@
         </PartImage>
         <PartText x="4" y="29" width="52" height="22">
           <Text align="CENTER" ellipsis="TRUE">
-            <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+            <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
           </Text>
         </PartText>
       </Complication>
@@ -1694,16 +1758,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1715,16 +1779,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1736,16 +1800,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1757,16 +1821,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1778,16 +1842,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.RANGED_VALUE_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1796,27 +1860,35 @@
             <ListOption id="s4">
               <Condition>
                 <Expressions>
-                  <Expression name="lv0">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.7</Expression>
-                  <Expression name="lv1">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.35</Expression>
+                  <Expression name="lv0">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.75</Expression>
+                  <Expression name="lv1">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.5</Expression>
+                  <Expression name="lv2">([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]) &gt;= 0.25</Expression>
                 </Expressions>
                 <Compare expression="lv0">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]">HIGH</Font>
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">HIGH</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Compare expression="lv1">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]">MED</Font>
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">MEDIUM</Font>
+                    </Text>
+                  </PartText>
+                </Compare>
+                <Compare expression="lv2">
+                  <PartText x="4" y="19" width="52" height="22">
+                    <Text align="CENTER" ellipsis="TRUE">
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">LOW</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]">LOW</Font>
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">RELAXED</Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1843,16 +1915,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1864,16 +1936,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1885,16 +1957,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1906,16 +1978,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1927,16 +1999,16 @@
                   <Expression name="hasText">textLength([COMPLICATION.TEXT]) &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hasText">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
+                      <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%d<Parameter expression="round([COMPLICATION.GOAL_PROGRESS_VALUE])"/></Template></Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1945,27 +2017,35 @@
             <ListOption id="s4">
               <Condition>
                 <Expressions>
-                  <Expression name="lv0">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.7</Expression>
-                  <Expression name="lv1">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.35</Expression>
+                  <Expression name="lv0">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.75</Expression>
+                  <Expression name="lv1">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.5</Expression>
+                  <Expression name="lv2">[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt;= 0.25</Expression>
                 </Expressions>
                 <Compare expression="lv0">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]">HIGH</Font>
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">HIGH</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Compare expression="lv1">
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]">MED</Font>
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">MEDIUM</Font>
+                    </Text>
+                  </PartText>
+                </Compare>
+                <Compare expression="lv2">
+                  <PartText x="4" y="19" width="52" height="22">
+                    <Text align="CENTER" ellipsis="TRUE">
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">LOW</Font>
                     </Text>
                   </PartText>
                 </Compare>
                 <Default>
-                  <PartText x="6" y="19" width="48" height="22">
+                  <PartText x="4" y="19" width="52" height="22">
                     <Text align="CENTER" ellipsis="TRUE">
-                      <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]">LOW</Font>
+                      <Font family="fredoka_bold" size="12" color="[CONFIGURATION.theme.2]">RELAXED</Font>
                     </Text>
                   </PartText>
                 </Default>
@@ -1980,7 +2060,7 @@
         </PartImage>
         <PartText x="4" y="29" width="52" height="22">
           <Text align="CENTER" ellipsis="TRUE">
-            <Font family="fredoka_bold" size="17" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
+            <Font family="fredoka_bold" size="14" color="[CONFIGURATION.theme.2]"><Template>%s<Parameter expression="[COMPLICATION.TEXT]"/></Template></Font>
           </Text>
         </PartText>
       </Complication>
