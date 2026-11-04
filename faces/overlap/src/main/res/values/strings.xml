@@ -1,4 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Overlap</string>
+
+    <!-- Settings (Customize screen) -->
+    <string name="cfg_theme">Color theme</string>
+    <string name="cfg_date">Show date</string>
+    <string name="cfg_heartbeat">Heartbeat animation</string>
+    <string name="cfg_rain">Rain animation</string>
+    <string name="cfg_levels">Show Low / Med / High on</string>
+    <string name="level_off">No slot</string>
+
+    <!-- Complication slots -->
+    <string name="slot_left">Left</string>
+    <string name="slot_right">Right</string>
+    <string name="slot_bottom">Bottom</string>
+    <string name="slot_bottom_left">Bottom left</string>
+    <string name="slot_bottom_right">Bottom right</string>
+
+    <!-- Themes -->
+    <string name="theme_oat">Oat</string>
+    <string name="theme_sage">Sage</string>
+    <string name="theme_coral">Coral</string>
+    <string name="theme_glacier">Glacier</string>
+    <string name="theme_lilac">Lilac</string>
+    <string name="theme_mono">Mono</string>
+    <string name="theme_mint">Mint</string>
+    <string name="theme_amber">Amber</string>
+    <string name="theme_rose">Rose</string>
+    <string name="theme_ocean">Ocean</string>
+    <string name="theme_lemon">Lemon</string>
+    <string name="theme_berry">Berry</string>
 </resources>
