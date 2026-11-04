@@ -1,0 +1,10 @@
+.gradle/
+build/
+**/build/
+local.properties
+out/
+dist/
+.idea/
+*.iml
+__pycache__/
+.xsd-cache/
