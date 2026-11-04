@@ -5,7 +5,7 @@ Each face is its own module under `faces/`, and they share one build, signing an
 
 | Face | Preview |
 |---|---|
-| [Overlap](faces/overlap/): stacked two-tone digits, curved date, 3 configurable complications, 6 themes | <img src="faces/overlap/docs/preview.png" width="220"> |
+| [Overlap](faces/overlap/): stacked two-tone digits, curved date, 5 configurable complications, 12 themes, heartbeat and rain animations | <img src="faces/overlap/docs/preview.png" width="220"> |
 
 ## Get the APKs (phone only, no PC)
 
@@ -55,7 +55,7 @@ python3 tools/validate_wff.py                # pip install xmlschema
 
 ## Battery rules every face here follows
 
-- **No seconds, no animations.** The face redraws once a minute (or when a complication changes).
+- **No seconds. Animations are optional,** run at 15 fps or less, only in full mode, with an off switch.
 - **Always-on mode at ≤ 15% lit pixels**, the Wear OS guideline. Use outlines or small dim elements, never big filled areas.
 - **Complications hidden in always-on mode.** The data still updates, but nothing is drawn.
 - **Pure black background.** OLED pixels that are black are off and use no power.
