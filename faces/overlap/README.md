@@ -16,16 +16,17 @@ three complication slots.
 | Show date | on / off | on |
 | Heartbeat animation | on / off (beating heart in the bottom-left slot) | on |
 | Rain animation | on / off (falling rain behind the digits, only while it is raining) | on |
-| Show Low / Med / High on | No slot, or one of the five slots | No slot |
+| Stress level words on | None, or one of the five slots (each option has a mini map of the slot) | None |
 | Left slot (vertical) | ranged value, goal, short text, icon, small image | Watch battery |
 | Right slot (vertical) | same | Step count |
 | Bottom slot | ranged value, goal, short text, long text, icon | Empty, which shows weather (icon + temperature) |
 | Bottom-left slot | ranged value, goal, short text, icon, small image | Empty, which shows heart rate |
 | Bottom-right slot | same | Sunrise / sunset |
 
-**Low / Med / High:** for a slot you pick, values on a min–max scale (stress, for example) are shown as
-words: HIGH at 70% of the range or more, MED at 35% or more, LOW below that. Every slot prefers
-ranged values, so providers such as stress and battery send a number this can work with.
+**Stress level words:** the slot you pick shows its min–max value (stress) as Samsung-style words:
+RELAXED, LOW, MEDIUM or HIGH, in even quarters of the range (under 25%, 25–49%, 50–74%, 75% and up).
+Samsung doesn't publish its own cut-offs, so compare with the Stress screen once and tell us if a band is off.
+Every slot prefers ranged values, so providers such as stress and battery send a number this can work with.
 
 The date is split around 12 o'clock so the watch's charging and status icons don't cover it.
 12/24-hour follows the watch setting.
