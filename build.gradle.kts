@@ -43,8 +43,11 @@ subprojects {
 
             buildTypes {
                 getByName("release") {
-                    // A WFF APK has no code, so there is nothing to minify or shrink.
-                    isMinifyEnabled = false
+                    // A WFF APK must not contain code. R8 with no sources leaves no
+                    // classes.dex (without it AGP still packs the R class). Resource
+                    // shrinking stays off: the face XML references resources by name.
+                    isMinifyEnabled = true
+                    isShrinkResources = false
                     signingConfig = signingConfigs.getByName("sideload")
                 }
             }

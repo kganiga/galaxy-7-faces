@@ -79,6 +79,9 @@ jobs:
             face=$(basename "$(dirname "$props")")
             ver=$(grep -E '^versionName=' "$props" | cut -d= -f2-)
             apk="faces/$face/build/outputs/apk/release/$face-release.apk"
+            if unzip -l "$apk" | grep -q 'classes.*\.dex'; then
+              echo "::error::$face: APK contains code (classes.dex); WFF faces must be code-free"; exit 1
+            fi
             cp "$apk" "dist/$face-$ver.apk"
           done
           ls -la dist
