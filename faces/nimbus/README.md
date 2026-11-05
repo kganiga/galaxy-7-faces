@@ -58,6 +58,6 @@ complications are off in always-on.
 
 - `design/gen_watchface.py` writes `src/main/res/raw/watchface.xml` (don't edit the XML by hand).
 - `design/make_weather_art.py` draws the big weather pictures (`wxl_*.png`), all procedural.
-- `design/make_icons.py` draws the bolt icon. The small forecast icons `wx_*.png` come from Overlap.
+- `design/make_icons.py` draws the bolt icon. The small forecast icons `wx_*.png` come from `tools/weather_icons.py`.
 - `design/render_preview.py` draws the preview, launcher icon and the images above.
 - Font: Barlow Semi Condensed Bold (SIL Open Font License, see `licenses/Barlow-OFL.txt`).

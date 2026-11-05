@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Draws Nimbus's small icons into res/drawable-nodpi. White on transparent (tinted by the face).
-The small forecast icons wx_*.png are shared with Overlap (faces/overlap/design/make_icons.py).
+The small forecast icons wx_*.png come from tools/weather_icons.py (draw_weather).
 usage: python3 design/make_icons.py     (needs Pillow)
 """
 import os
