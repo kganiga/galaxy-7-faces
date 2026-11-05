@@ -72,17 +72,10 @@ def paste_icon(im, res, x, y, w, h, tint=None):
 
 
 def clock(d, size, groups, color, cy, sample):
-    dw, cw = round(size * g.DIGIT), round(size * g.COLON)
-    total = len(groups) * 2 * dw + (len(groups) - 1) * cw
-    x = round(g.CX - total / 2)
     digits = iter(sample.replace(":", ""))
-    for gi, grp in enumerate(groups):
-        if gi:
-            text_box(d, x, cy - size * 0.6, cw, size, ":", size, color)
-            x += cw
-        for _ in grp:
-            d.text(((x + dw / 2) * SS, cy * SS), next(digits), font=F(size), fill=color, anchor="mm")
-            x += dw
+    for f, x, y, w, h in g.clock_boxes(size, groups, cy):
+        ch = ":" if f == ":" else next(digits)
+        text_box(d, x, y, w, h, ch, size, color)
 
 
 def render(theme=0, art="wxl_partly_day", seconds=True, sample="10:30:00"):
@@ -109,11 +102,7 @@ def render(theme=0, art="wxl_partly_day", seconds=True, sample="10:30:00"):
         o = g.OPT[default]
         if o[0] == "none":
             continue
-        rr = ring["tr"] - ring["vs"] * 0.35
-        deg = lambda px: math.degrees(px / rr)
-        gap = deg(5)
-        wl, wv = deg(g.width(o[2], ring["ls"])), deg(g.width(o[6], ring["vs"]))
-        split = (a0 + a1) / 2 - (wl + gap + wv) / 2 + wl
+        split, gap = g.ring_split(ring, a0, a1, o[2], o[6])
         curved(im, o[2], ring, a0, split, ring["ls"], col(g.LABEL), "END")
         curved(im, o[6], ring, split + gap, a1, ring["vs"], col(g.WHITE), "START")
     x, y, w, h = g.ART
@@ -177,7 +166,7 @@ def finish(im):
 
 
 def lit_fraction(im):
-    px = im.convert("L").getdata()
+    px = im.convert("L").tobytes()
     return sum(1 for p in px if p > 24) / (math.pi * 225 * 225)
 
 

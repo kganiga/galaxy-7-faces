@@ -93,34 +93,39 @@ DOTS = {id(OUTER): (-67.5, 0, 67.5), id(INNER): (-63.5, 0, 63.5)}
 # ---- Centre -----------------------------------------------------------------------
 DISK_R = 152
 ART = (115, 62, 220, 220)          # x, y, w, h of the big weather picture
-WX_ART = [  # (expression, picture) first match wins; WEATHER.CONDITION values 0..15
-    ("[WEATHER.CONDITION] == 9", "wxl_storm"),
-    ("[WEATHER.CONDITION] == 4 || [WEATHER.CONDITION] == 6 || [WEATHER.CONDITION] == 10 || [WEATHER.CONDITION] == 12", "wxl_rain"),
-    ("[WEATHER.CONDITION] == 5 || [WEATHER.CONDITION] == 7 || [WEATHER.CONDITION] == 11", "wxl_snow"),
-    ("[WEATHER.CONDITION] == 3 || [WEATHER.CONDITION] == 13", "wxl_fog"),
-    ("[WEATHER.CONDITION] == 2", "wxl_cloud"),
-    ("[WEATHER.CONDITION] == 14 &amp;&amp; [WEATHER.IS_DAY]", "wxl_partly_day"),
-    ("[WEATHER.CONDITION] == 14", "wxl_partly_night"),
-    ("[WEATHER.CONDITION] == 15", "wxl_wind"),
-    ("([WEATHER.CONDITION] == 1 || [WEATHER.CONDITION] == 8) &amp;&amp; [WEATHER.IS_DAY]", "wxl_sun"),
-    ("[WEATHER.CONDITION] == 1 || [WEATHER.CONDITION] == 8", "wxl_moon"),
+RAIN_CODES, SNOW_CODES, STORM = (4, 6, 10, 12), (5, 7, 11), 9
+# One table for every weather lookup. WEATHER.CONDITION values 0..15; first match wins,
+# anything unmatched (0 = unknown) falls through to the default.
+#   codes, big picture (day, night), small icon (day, night)
+WEATHER = [
+    ((STORM,),     ("wxl_storm", "wxl_storm"),             ("wx_storm", "wx_storm")),
+    (RAIN_CODES,   ("wxl_rain", "wxl_rain"),               ("wx_rain", "wx_rain")),
+    (SNOW_CODES,   ("wxl_snow", "wxl_snow"),               ("wx_snow", "wx_snow")),
+    ((3, 13),      ("wxl_fog", "wxl_fog"),                 ("wx_fog", "wx_fog")),
+    ((2,),         ("wxl_cloud", "wxl_cloud"),             ("wx_cloud", "wx_cloud")),
+    ((14,),        ("wxl_partly_day", "wxl_partly_night"), ("wx_partly", "wx_partly")),
+    ((15,),        ("wxl_wind", "wxl_wind"),               ("wx_wind", "wx_wind")),
+    ((1, 8),       ("wxl_sun", "wxl_moon"),                ("wx_sun", "wx_moon")),
 ]
 
 
-def small_icons(cond, isday=None):
-    """Same mapping for the small tintable forecast icons."""
-    night = f" &amp;&amp; !{isday}" if isday else " &amp;&amp; false"
-    return [
-        (f"{cond} == 9", "wx_storm"),
-        (f"{cond} == 4 || {cond} == 6 || {cond} == 10 || {cond} == 12", "wx_rain"),
-        (f"{cond} == 5 || {cond} == 7 || {cond} == 11", "wx_snow"),
-        (f"{cond} == 3 || {cond} == 13", "wx_fog"),
-        (f"{cond} == 2", "wx_cloud"),
-        (f"{cond} == 14", "wx_partly"),
-        (f"{cond} == 15", "wx_wind"),
-        (f"({cond} == 1 || {cond} == 8){night}", "wx_moon"),
-        (f"{cond} == 1 || {cond} == 8", "wx_sun"),
-    ]
+def any_of(src, codes):
+    e = " || ".join(f"{src} == {v}" for v in codes)
+    return f"({e})" if len(codes) > 1 else e
+
+
+def weather_cases(src, isday=None, big=False):
+    """[(expression, resource)] for a condition source. isday=None means daytime only."""
+    out = []
+    for codes, big_res, small_res in WEATHER:
+        day, night = big_res if big else small_res
+        e = any_of(src, codes)
+        if isday and day != night:
+            out.append((f"{e} &amp;&amp; {isday}", day))
+            out.append((e, night))
+        else:
+            out.append((e, day))
+    return out
 
 
 # Lower block
@@ -180,6 +185,16 @@ def cond(exprs, cases, default=""):
     return '<Condition>\n  <Expressions>\n' + e + '  </Expressions>\n' + cs + d + '</Condition>\n'
 
 
+def outline_pill(x, y, w, h, color, thickness=1.5, fill=None):
+    r = h / 2 - 1
+    f = f'\n    <Fill color="{fill}"/>' if fill else ""
+    return (f'<PartDraw x="{x}" y="{y}" width="{w}" height="{h}">\n'
+            f'  <RoundRectangle x="1" y="1" width="{w - 2}" height="{h - 2}" cornerRadiusX="{r}" cornerRadiusY="{r}">{f}\n'
+            f'    <Stroke color="{color}" thickness="{thickness}"/>\n'
+            f'  </RoundRectangle>\n'
+            f'</PartDraw>\n')
+
+
 def image(x, y, w, h, res, tint=None, extra=""):
     t = f' tintColor="{tint}"' if tint else ""
     return (f'<PartImage x="{x}" y="{y}" width="{w}" height="{h}"{t}{extra}>\n'
@@ -197,16 +212,20 @@ def width(t, size):
     return _F[size].getlength(t)
 
 
-def ring_item(ring, a0, a1, opt):
-    oid, _, label, template, params, guard, sample = opt
-    if oid == "none":
-        return ""
+def ring_split(ring, a0, a1, label, sample):
+    """Label ends at `split`, value starts at `split + gap`, so label+sample value is centred."""
     r = ring["tr"] - ring["vs"] * 0.35           # roughly where the glyph middles sit
     deg = lambda px: math.degrees(px / r)
     gap = deg(5)
     wl, wv = deg(width(label, ring["ls"])), deg(width(sample, ring["vs"]))
-    start = (a0 + a1) / 2 - (wl + gap + wv) / 2
-    split = start + wl
+    return (a0 + a1) / 2 - (wl + gap + wv) / 2 + wl, gap
+
+
+def ring_item(ring, a0, a1, opt):
+    oid, _, label, template, params, guard, sample = opt
+    if oid == "none":
+        return ""
+    split, gap = ring_split(ring, a0, a1, label, sample)
     lab = ctext(ring, a0, split, esc(label), ring["ls"], LABEL, "END")
     val = ctext(ring, split + gap, a1, tmpl(template, params), ring["vs"], WHITE, "START")
     if guard:
@@ -258,8 +277,9 @@ def bands():
 
 def weather_art():
     x, y, w, h = ART
-    cases = [(f"a{i}", image(x, y, w, h, res)) for i, (_, res) in enumerate(WX_ART)]
-    inner = cond([(f"a{i}", e) for i, (e, _) in enumerate(WX_ART)], cases, image(x, y, w, h, "wxl_unknown"))
+    arts = weather_cases("[WEATHER.CONDITION]", "[WEATHER.IS_DAY]", big=True)
+    cases = [(f"a{i}", image(x, y, w, h, res)) for i, (_, res) in enumerate(arts)]
+    inner = cond([(f"a{i}", e) for i, (e, _) in enumerate(arts)], cases, image(x, y, w, h, "wxl_unknown"))
     return cond([("wx", f"{WX} &amp;&amp; !([WEATHER.IS_ERROR])")], [("wx", inner)],
                 image(x, y, w, h, "wxl_unknown"))
 
@@ -283,53 +303,55 @@ def motion():
                       f'<Animation interpolation="LINEAR" duration="{sec:.2f}" repeat="-1" fps="12"/></Transform>\n'
                       f'</PartDraw>\n')
         return f'<Group name="{"snow" if snow else "rain"}" x="0" y="0" width="450" height="450">\n' + ind(parts, 2) + '</Group>\n'
-    rain = " || ".join(f"[WEATHER.CONDITION] == {v}" for v in (4, 6, 9, 10, 12))
-    snow = " || ".join(f"[WEATHER.CONDITION] == {v}" for v in (5, 7, 11))
-    body = cond([("r", f"{WX} &amp;&amp; ({rain})"), ("s", f"{WX} &amp;&amp; ({snow})")],
+    rain = any_of("[WEATHER.CONDITION]", RAIN_CODES + (STORM,))
+    snow = any_of("[WEATHER.CONDITION]", SNOW_CODES)
+    body = cond([("r", f"{WX} &amp;&amp; {rain}"), ("s", f"{WX} &amp;&amp; {snow}")],
                 [("r", layer(False)), ("s", layer(True))])
     return ('<BooleanConfiguration id="motion">\n  <BooleanOption id="TRUE">\n'
             + ind(body, 4) + '  </BooleanOption>\n</BooleanConfiguration>\n')
 
 
+DATE = '<Upper>' + tmpl("%d %s", ["[DAY]", "[DAY_OF_WEEK_S]"]) + '</Upper>'
+
+
 def pill():
     x, y, w, h = PILL
-    r = h / 2
-    draw = (f'<PartDraw x="{x}" y="{y}" width="{w}" height="{h}">\n'
-            f'  <RoundRectangle x="1" y="1" width="{w - 2}" height="{h - 2}" cornerRadiusX="{r - 1}" cornerRadiusY="{r - 1}">\n'
-            f'    <Fill color="#B3000000"/>\n'
-            f'    <Stroke color="{c(2)}" thickness="2"/>\n'
-            f'  </RoundRectangle>\n'
-            f'</PartDraw>\n')
-    date = text(x + 108, y + 2, w - 122, h - 4,
-                '<Upper>' + tmpl("%d %s", ["[DAY]", "[DAY_OF_WEEK_S]"]) + '</Upper>', 22, WHITE, "END")
-    return draw + date
+    return (outline_pill(x, y, w, h, c(2), 2, "#B3000000")
+            + text(x + 108, y + 2, w - 122, h - 4, DATE, 22, WHITE, "END"))
 
 
 DIGIT = 0.53    # digit box width in em (monospaced boxes stop the time jiggling each second)
 COLON = 0.26
 
 
-def clock(size, fmt_groups, color, cy):
-    """fmt_groups: e.g. [("hh_10","hh_1"), ("mm_10","mm_1"), ("ss_10","ss_1")]"""
+def clock_boxes(size, fmt_groups, cy):
+    """[(format or ":", x, y, w, h)] in fixed boxes (monospaced, so the time doesn't jiggle).
+    fmt_groups: e.g. [("hh_10","hh_1"), ("mm_10","mm_1"), ("ss_10","ss_1")]"""
     dw, cw = round(size * DIGIT), round(size * COLON)
     total = len(fmt_groups) * 2 * dw + (len(fmt_groups) - 1) * cw
     x = round(CX - total / 2)
     top = round(cy - 0.65 * size)   # Barlow digits: cap middle ~0.65 em below the box top
     h = round(size * 1.2)
-    out = ""
+    out = []
     for gi, g in enumerate(fmt_groups):
         if gi:
-            out += (f'<PartText x="{x}" y="{top}" width="{cw}" height="{h}">\n'
-                    f'  <Text align="CENTER">{font(size, color, ":")}</Text>\n</PartText>\n')
+            out.append((":", x, top, cw, h))
             x += cw
         for fmt in g:
-            out += (f'<DigitalClock x="{x}" y="{top}" width="{dw}" height="{h}">\n'
-                    f'  <TimeText format="{fmt}" hourFormat="SYNC_TO_DEVICE" align="CENTER" '
-                    f'x="0" y="0" width="{dw}" height="{h}">\n'
-                    f'    <Font family="{FONT}" size="{size}" color="{color}"/>\n'
-                    f'  </TimeText>\n</DigitalClock>\n')
+            out.append((fmt, x, top, dw, h))
             x += dw
     return out
+
+
+def clock(size, fmt_groups, color, cy):
+    boxes = clock_boxes(size, fmt_groups, cy)
+    colons = "".join(text(x, y, w, h, ":", size, color) for f, x, y, w, h in boxes if f == ":")
+    digits = "".join(f'  <TimeText format="{f}" hourFormat="SYNC_TO_DEVICE" align="CENTER" '
+                     f'x="{x}" y="{y}" width="{w}" height="{h}">\n'
+                     f'    <Font family="{FONT}" size="{size}" color="{color}"/>\n'
+                     f'  </TimeText>\n' for f, x, y, w, h in boxes if f != ":")
+    # one DigitalClock for all digits (one time binding instead of one per digit)
+    return colons + '<DigitalClock x="0" y="0" width="450" height="450">\n' + digits + '</DigitalClock>\n'
 
 
 HM = [("hh_10", "hh_1"), ("mm_10", "mm_1")]
@@ -434,14 +456,11 @@ DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]   # WFF DAY_OF_WEEK: 1 
 
 
 def forecast_block(cx, y, cond_expr, isday, hi_tmpl, hi_params, label_body, avail):
-    icons = small_icons(cond_expr, isday)
+    icons = weather_cases(cond_expr, isday)
     ic = cond([(f"i{i}", e) for i, (e, _) in enumerate(icons)],
               [(f"i{i}", image(cx - 14, y, 28, 28, r, AOD_GREY)) for i, (_, r) in enumerate(icons)])
     temps = text(cx - 45, y + 30, 90, 28, tmpl(hi_tmpl, hi_params), 24, AOD_GREY)
-    lab = (f'<PartDraw x="{cx - 28}" y="{y + 61}" width="56" height="24">\n'
-           f'  <RoundRectangle x="1" y="1" width="54" height="22" cornerRadiusX="11" cornerRadiusY="11">\n'
-           f'    <Stroke color="{AOD_DIM}" thickness="1.5"/>\n'
-           f'  </RoundRectangle>\n</PartDraw>\n'
+    lab = (outline_pill(cx - 28, y + 61, 56, 24, AOD_DIM)
            + (text(cx - 28, y + 62, 56, 22, label_body, 16, AOD_GREY) if label_body else ""))
     return cond([("ok", avail)], [("ok", ic + temps + lab)])
 
@@ -457,11 +476,7 @@ AOD_FC_X = (180, 270)
 
 def ambient():
     # date pill
-    out = (f'<PartDraw x="160" y="100" width="130" height="32">\n'
-           f'  <RoundRectangle x="1" y="1" width="128" height="30" cornerRadiusX="15" cornerRadiusY="15">\n'
-           f'    <Stroke color="{AOD_DIM}" thickness="1.5"/>\n'
-           f'  </RoundRectangle>\n</PartDraw>\n'
-           + text(160, 102, 130, 28, '<Upper>' + tmpl("%d %s", ["[DAY]", "[DAY_OF_WEEK_S]"]) + '</Upper>', 21, AOD_GREY))
+    out = outline_pill(160, 100, 130, 32, AOD_DIM) + text(160, 102, 130, 28, DATE, 21, AOD_GREY)
     out += clock(96, HM, AOD_GREY, 192)
     # forecast: daily (tomorrow, day after) from 07:00, hourly (+3h, +6h) overnight
     daily = ""
