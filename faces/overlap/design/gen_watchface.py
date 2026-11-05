@@ -8,6 +8,11 @@ Run from the face folder (faces/overlap):
 All geometry is for a 450x450 round canvas (Galaxy Watch 7 renders WFF at 450).
 User-visible names live in src/main/res/values/strings.xml and are referenced by name.
 """
+import os, sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "tools"))
+import wff
+from wff import ind, RANGE, GOAL
 
 FONT = "fredoka_bold"
 
@@ -28,8 +33,7 @@ THEMES = [
 ]
 
 
-def c(i):
-    return f"[CONFIGURATION.theme.{i}]"
+c = wff.theme
 
 
 # ---- Digit geometry -------------------------------------------------------
@@ -108,16 +112,8 @@ WORD_SIZE = {"side": 24, "bottom": 28, "round": 12}   # level words are longer t
 LEVEL_OPTIONS = [("off", "level_off", "lvl_off")] + [(f"s{s[0]}", s[1], f"lvl_s{s[0]}") for s in SLOTS]
 LEVELS = [(0.75, "level_high"), (0.50, "level_medium"), (0.25, "level_low")]   # else Relaxed
 
-RANGE = "([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])"
-GOAL = "[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]"
-
 # Words shown on the face itself (not settings). Kept English: WFF Templates take literals.
 WORDS = {"level_high": "HIGH", "level_medium": "MEDIUM", "level_low": "LOW", "level_relaxed": "RELAXED"}
-
-
-def ind(s, n):
-    pad = " " * n
-    return "".join(pad + line if line.strip() else line for line in s.splitlines(True))
 
 
 def text_part(x, y, w, h, template, size, color=None, align="CENTER", params=()):
@@ -200,10 +196,7 @@ def ring(size, frac_expr):
 
 
 def image(x, y, w, h, src, tint=True):
-    t = f' tintColor="{c(2)}"' if tint else ""
-    return (f'<PartImage x="{x}" y="{y}" width="{w}" height="{h}"{t}>\n'
-            f'  <Image resource="{src}"/>\n'
-            f'</PartImage>\n')
+    return wff.image(x, y, w, h, src, c(2) if tint else None)
 
 
 def progress_content(slot_id, kind, frac_expr, value_expr):
@@ -292,7 +285,7 @@ def slot(sid, name, kind, cx, cy, angle, provider, ptype):
     if kind == "round":
         bound = f'<BoundingOval x="0" y="0" width="{W}" height="{H}"/>'
     else:
-        bound = f'<BoundingRoundBox x="0" y="0" width="{W}" height="{H}" cornerRadius="{H // 2}"/>'
+        bound = wff.round_box(W, H, H // 2)
     sz = 34 if kind != "round" else 30
     mono = image((W - sz) // 2, (H - sz) // 2, sz, sz, "[COMPLICATION.MONOCHROMATIC_IMAGE]")
     small = image((W - sz) // 2, (H - sz) // 2, sz, sz, "[COMPLICATION.SMALL_IMAGE]", tint=False)
@@ -305,25 +298,12 @@ def slot(sid, name, kind, cx, cy, angle, provider, ptype):
         "SMALL_IMAGE": small,
         "EMPTY": (weather_content(W, H) if sid == 2 else heart_content(W, H) if sid == 3 else ""),
     }
-    angle_attr = f' angle="{angle}"' if angle else ""
-    out = (f'<ComplicationSlot slotId="{sid}" displayName="{name}" x="{x}" y="{y}" width="{W}" height="{H}"'
-           f'{angle_attr} isCustomizable="TRUE" supportedTypes="{TYPES[kind]}">\n'
-           f'  <DefaultProviderPolicy defaultSystemProvider="{provider}" defaultSystemProviderType="{ptype}"/>\n'
-           f'  {bound}\n'
-           f'  <Variant mode="AMBIENT" target="alpha" value="0"/>\n')
-    for t in TYPES[kind].split():
-        body = parts[t]
-        out += (f'  <Complication type="{t}">\n' + ind(body, 4) + '  </Complication>\n') if body \
-            else f'  <Complication type="{t}"/>\n'
-    return out + '</ComplicationSlot>\n'
+    return wff.slot_xml(sid, name, x, y, W, H, TYPES[kind], provider, ptype, parts, bound, angle)
 
 
 # ---- Scene pieces ---------------------------------------------------------------------
 def time_text(fmt, x, y, color):
-    return (f'<TimeText format="{fmt}" hourFormat="SYNC_TO_DEVICE" align="CENTER" '
-            f'x="{x}" y="{y}" width="{BOX_W}" height="{BOX_H}">\n'
-            f'  <Font family="{FONT}" size="{SIZE}" color="{color}"/>\n'
-            f'</TimeText>\n')
+    return wff.time_text(fmt, x, y, BOX_W, BOX_H, FONT, SIZE, color)
 
 
 def digit_clock():
@@ -332,7 +312,7 @@ def digit_clock():
         x, y = COL_X[col] - BOX_W // 2, ROW_Y[row]
         body += time_text(fmt, x + SHADOW, y + SHADOW, "#FF000000")   # carved shadow
         body += time_text(fmt, x, y, c(tone))
-    return '<DigitalClock x="0" y="0" width="450" height="450">\n' + ind(body, 2) + '</DigitalClock>\n'
+    return wff.digital_clock(body)
 
 
 def ambient_clock():
@@ -343,7 +323,7 @@ def ambient_clock():
                  f'x="{x}" y="{y}" width="{AMB_W}" height="{AMB_H}">\n'
                  f'  <BitmapFont family="amb_{"ab"[tone]}" size="{AMB_H}"/>\n'
                  f'</TimeText>\n')
-    return '<DigitalClock x="0" y="0" width="450" height="450">\n' + ind(body, 2) + '</DigitalClock>\n'
+    return wff.digital_clock(body)
 
 
 def bitmap_fonts():
@@ -409,14 +389,9 @@ def rain_layer():
 
 
 def user_configs():
-    colors = "".join(f'<ColorOption id="{i}" displayName="{name}" colors="{" ".join(cols)}"/>\n'
-                     for i, (_, name, cols) in enumerate(THEMES))
     levels = "".join(f'<ListOption id="{oid}" displayName="{name}" icon="{icon}"/>\n'
                      for oid, name, icon in LEVEL_OPTIONS)
-    return ('<UserConfigurations>\n'
-            '  <ColorConfiguration id="theme" displayName="cfg_theme" defaultValue="0">\n'
-            + ind(colors, 4) +
-            '  </ColorConfiguration>\n'
+    return ('<UserConfigurations>\n' + ind(wff.color_config(THEMES), 2) +
             '  <BooleanConfiguration id="showDate" displayName="cfg_date" defaultValue="TRUE"/>\n'
             '  <BooleanConfiguration id="heartbeat" displayName="cfg_heartbeat" defaultValue="TRUE"/>\n'
             '  <BooleanConfiguration id="rainFx" displayName="cfg_rain" defaultValue="TRUE"/>\n'
@@ -429,22 +404,11 @@ def user_configs():
 def main():
     scene = (rain_layer()
              + date_arc()
-             + '<Group name="digitsActive" x="0" y="0" width="450" height="450" alpha="255">\n'
-             '  <Variant mode="AMBIENT" target="alpha" value="0"/>\n'
-             + ind(digit_clock(), 2) + '</Group>\n'
-             + '<Group name="digitsAmbient" x="0" y="0" width="450" height="450" alpha="0">\n'
-             '  <Variant mode="AMBIENT" target="alpha" value="255"/>\n'
-             + ind(ambient_clock(), 2) + '</Group>\n'
+             + wff.active_only("digitsActive", digit_clock(), attrs=' alpha="255"')
+             + wff.ambient_only("digitsAmbient", ambient_clock())
              + "".join(slot(*s) for s in SLOTS))
-    xml = ('<?xml version="1.0" encoding="utf-8"?>\n'
-           '<!-- Overlap: stacked two-tone digital watch face. Watch Face Format v2. '
-           'GENERATED by design/gen_watchface.py, do not edit by hand. -->\n'
-           '<WatchFace width="450" height="450" clipShape="CIRCLE">\n'
-           '  <Metadata key="CLOCK_TYPE" value="DIGITAL"/>\n'
-           '  <Metadata key="PREVIEW_TIME" value="10:08:32"/>\n'
-           + ind(user_configs(), 2) + ind(bitmap_fonts(), 2)
-           + '  <Scene backgroundColor="#FF000000">\n' + ind(scene, 4) + '  </Scene>\n'
-           '</WatchFace>\n')
+    xml = wff.watchface("Overlap: stacked two-tone digital watch face.", "10:08:32",
+                        user_configs(), scene, bitmap_fonts())
     print(xml, end="")
 
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bloom</string>
+
+    <!-- Settings (Customize screen) -->
+    <string name="cfg_theme">Color theme</string>
+    <string name="cfg_zone">Second time zone (bottom right, when that slot is empty)</string>
+
+    <!-- Complication slots -->
+    <string name="slot_left">Left (weather when empty)</string>
+    <string name="slot_right">Right (date when empty)</string>
+    <string name="slot_tile_left">Bottom left</string>
+    <string name="slot_tile_right">Bottom right (second time zone when empty)</string>
+    <string name="slot_arc">Bottom arc</string>
+
+    <!-- Second time zone -->
+    <string name="zone_off">Off</string>
+    <string name="zone_lon">London</string>
+    <string name="zone_par">Paris</string>
+    <string name="zone_ist">Istanbul</string>
+    <string name="zone_ruh">Riyadh</string>
+    <string name="zone_dxb">Dubai</string>
+    <string name="zone_khi">Karachi</string>
+    <string name="zone_del">India (Kolkata)</string>
+    <string name="zone_sin">Singapore</string>
+    <string name="zone_hkg">Hong Kong</string>
+    <string name="zone_tyo">Tokyo</string>
+    <string name="zone_syd">Sydney</string>
+    <string name="zone_nyc">New York</string>
+    <string name="zone_chi">Chicago</string>
+    <string name="zone_lax">Los Angeles</string>
+    <string name="zone_sao">São Paulo</string>
+    <string name="zone_utc">UTC</string>
+
+    <!-- Themes -->
+    <string name="theme_mocha">Mocha</string>
+    <string name="theme_sage">Sage</string>
+    <string name="theme_lavender">Lavender</string>
+    <string name="theme_ocean">Ocean</string>
+    <string name="theme_rose">Rose</string>
+    <string name="theme_citrus">Citrus</string>
+    <string name="theme_mint">Mint</string>
+    <string name="theme_coral">Coral</string>
+    <string name="theme_berry">Berry</string>
+    <string name="theme_sand">Sand</string>
+    <string name="theme_slate">Slate</string>
+    <string name="theme_mono">Mono</string>
+</resources>

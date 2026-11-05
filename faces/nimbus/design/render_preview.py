@@ -7,10 +7,12 @@ usage: python3 design/render_preview.py   -> res/drawable-nodpi/preview.png, mip
                                               docs/preview.png, docs/themes.png, docs/ambient.png
 """
 import math, os, sys
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import gen_watchface as g
+import gen_watchface as g   # also puts tools/ on sys.path
+import preview
+from preview import col
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 RES = os.path.join(ROOT, "src", "main", "res")
@@ -19,14 +21,20 @@ SS = 2
 N = 450 * SS
 
 
-def col(h):
-    h = h.lstrip("#")
-    a, rgb = int(h[:2], 16), h[2:]
-    return tuple(int(rgb[i:i + 2], 16) for i in (0, 2, 4)) + (a,)
-
-
 def F(size):
-    return ImageFont.truetype(g.FONT_FILE, int(size * SS))
+    return preview.font(g.FONT_FILE, size, SS)
+
+
+def text_box(d, x, y, w, h, t, size, color, align="CENTER"):
+    preview.text_box(d, g.FONT_FILE, SS, x, y, w, h, t, size, color, align)
+
+
+def paste_icon(im, res, x, y, w, h, tint=None):
+    preview.paste_icon(im, os.path.join(RES, "drawable-nodpi", res + ".png"), SS, x, y, w, h, tint)
+
+
+def finish(im):
+    return preview.finish(im, SS)
 
 
 def ring_band(d, r, t, color):
@@ -54,21 +62,6 @@ def curved(im, text, ring, a0, a1, size, color, align):
         y = g.CY * SS - r * math.cos(math.radians(mid))
         im.alpha_composite(tile, (int(x - tile.width / 2), int(y - tile.height / 2)))
         ang += math.degrees(w / r)
-
-
-def text_box(d, x, y, w, h, t, size, color, align="CENTER"):
-    f = F(size)
-    ax = {"CENTER": (x + w / 2, "mm"), "START": (x, "lm"), "END": (x + w, "rm")}[align]
-    d.text((ax[0] * SS, (y + h / 2) * SS), t, font=f, fill=color, anchor=ax[1])
-
-
-def paste_icon(im, res, x, y, w, h, tint=None):
-    ic = Image.open(os.path.join(RES, "drawable-nodpi", res + ".png")).convert("RGBA").resize((w * SS, h * SS), Image.LANCZOS)
-    if tint:
-        solid = Image.new("RGBA", ic.size, tint[:3] + (255,))
-        solid.putalpha(ic.getchannel("A"))
-        ic = solid
-    im.alpha_composite(ic, (x * SS, y * SS))
 
 
 def clock(d, size, groups, color, cy, sample):
@@ -157,19 +150,6 @@ def render_ambient(sample="10:09"):
     return finish(im)
 
 
-def finish(im):
-    mask = Image.new("L", (N, N), 0)
-    ImageDraw.Draw(mask).ellipse((0, 0, N - 1, N - 1), fill=255)
-    out = Image.new("RGBA", (N, N), (0, 0, 0, 0))
-    out.paste(im, (0, 0), mask)
-    return out.resize((450, 450), Image.LANCZOS)
-
-
-def lit_fraction(im):
-    px = im.convert("L").tobytes()
-    return sum(1 for p in px if p > 24) / (math.pi * 225 * 225)
-
-
 def main():
     os.makedirs(DOCS, exist_ok=True)
     main_img = render()
@@ -178,14 +158,11 @@ def main():
     main_img.save(os.path.join(DOCS, "preview.png"))
     arts = ["wxl_cloud", "wxl_moon", "wxl_rain", "wxl_sun", "wxl_partly_night", "wxl_snow",
             "wxl_storm", "wxl_fog", "wxl_partly_day", "wxl_wind", "wxl_cloud", "wxl_moon"]
-    sheet = Image.new("RGB", (4 * 230 + 10, 3 * 230 + 10), (24, 24, 24))
-    for i in range(len(g.THEMES)):
-        t = render(i, arts[i]).resize((220, 220), Image.LANCZOS)
-        sheet.paste(t, (10 + (i % 4) * 230, 10 + (i // 4) * 230), t)
+    sheet = preview.theme_sheet(lambda i: render(i, arts[i]), len(g.THEMES))
     sheet.save(os.path.join(DOCS, "themes.png"), optimize=True)
     amb = render_ambient()
     amb.save(os.path.join(DOCS, "ambient.png"))
-    print(f"ambient lit pixels: {lit_fraction(amb) * 100:.1f}% of the dial")
+    print(f"ambient lit pixels: {preview.lit_fraction(amb) * 100:.1f}% of the dial")
 
 
 if __name__ == "__main__":

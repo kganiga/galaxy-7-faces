@@ -7,6 +7,7 @@ Each face is its own module under `faces/`, and they share one build, signing an
 |---|---|
 | [Overlap](faces/overlap/): stacked two-tone digits, curved date, 5 configurable complications, 12 themes, heartbeat and rain animations | <img src="faces/overlap/docs/preview.png" width="220"> |
 | [Nimbus](faces/nimbus/): weather picture that follows the conditions, two configurable data rings, 3 complication slots, 12 themes, forecast on always-on | <img src="faces/nimbus/docs/preview.png" width="220"> |
+| [Bloom](faces/bloom/): stacked hours and minutes in a scalloped shape, second time zone, 5 complication slots (weather and date when empty), 12 themes | <img src="faces/bloom/docs/preview.png" width="220"> |
 
 ## Get the APKs (phone only, no PC)
 
@@ -30,6 +31,9 @@ faces/<name>/
   design/                  optional generator / preview scripts for that face
 build.gradle.kts           shared SDK levels, signing, versionCode for every face
 settings.gradle.kts        auto-includes every faces/* folder
+tools/wff.py               shared XML helpers every face generator imports
+tools/preview.py           shared Pillow helpers for the preview renders
+tools/weather_icons.py     the small weather icons (wx_*.png) faces draw into their res
 tools/validate_wff.py      validates every face against the official WFF XSD
 tools/build_without_gradle.sh   aapt2-only build, no Android Gradle Plugin
 tools/new_face.py          scaffolds a new face that builds immediately
@@ -73,4 +77,4 @@ Switching keys means uninstalling the old build once.
 
 ## Licenses
 
-Code: Apache-2.0. Fonts keep their own licenses in `licenses/` (Fredoka: SIL OFL 1.1).
+Code: Apache-2.0. Fonts keep their own licenses in `licenses/` (Fredoka, Barlow, Google Sans Flex: SIL OFL 1.1).

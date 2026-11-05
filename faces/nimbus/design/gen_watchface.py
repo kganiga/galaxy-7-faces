@@ -9,10 +9,13 @@ Run from the face folder (faces/nimbus):
 Geometry is for a 450x450 round canvas. Angles: 0 = 12 o'clock, clockwise.
 User-visible setting names live in src/main/res/values/strings.xml.
 """
-import math, os
+import math, os, sys
 from PIL import ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(HERE, "..", "..", "..", "tools"))
+import wff
+from wff import ind, esc, tmpl, cond, image, any_of, RAIN_CODES, SNOW_CODES, STORM, RANGE, GOAL, MONO, CTEXT
 FONT = "barlow_sc_bold"
 FONT_FILE = os.path.join(HERE, "..", "src", "main", "res", "font", FONT + ".ttf")
 CX = CY = 225
@@ -34,8 +37,7 @@ THEMES = [
 ]
 
 
-def c(i):
-    return f"[CONFIGURATION.theme.{i}]"
+c = wff.theme
 
 
 WHITE = "#FFFFFFFF"
@@ -93,39 +95,22 @@ DOTS = {id(OUTER): (-67.5, 0, 67.5), id(INNER): (-63.5, 0, 63.5)}
 # ---- Centre -----------------------------------------------------------------------
 DISK_R = 152
 ART = (115, 62, 220, 220)          # x, y, w, h of the big weather picture
-RAIN_CODES, SNOW_CODES, STORM = (4, 6, 10, 12), (5, 7, 11), 9
-# One table for every weather lookup. WEATHER.CONDITION values 0..15; first match wins,
-# anything unmatched (0 = unknown) falls through to the default.
-#   codes, big picture (day, night), small icon (day, night)
-WEATHER = [
-    ((STORM,),     ("wxl_storm", "wxl_storm"),             ("wx_storm", "wx_storm")),
-    (RAIN_CODES,   ("wxl_rain", "wxl_rain"),               ("wx_rain", "wx_rain")),
-    (SNOW_CODES,   ("wxl_snow", "wxl_snow"),               ("wx_snow", "wx_snow")),
-    ((3, 13),      ("wxl_fog", "wxl_fog"),                 ("wx_fog", "wx_fog")),
-    ((2,),         ("wxl_cloud", "wxl_cloud"),             ("wx_cloud", "wx_cloud")),
-    ((14,),        ("wxl_partly_day", "wxl_partly_night"), ("wx_partly", "wx_partly")),
-    ((15,),        ("wxl_wind", "wxl_wind"),               ("wx_wind", "wx_wind")),
-    ((1, 8),       ("wxl_sun", "wxl_moon"),                ("wx_sun", "wx_moon")),
-]
-
-
-def any_of(src, codes):
-    e = " || ".join(f"{src} == {v}" for v in codes)
-    return f"({e})" if len(codes) > 1 else e
+# Weather pictures per kind (wff.WEATHER_KINDS): big picture (day, night), small icon (day, night)
+WEATHER = {
+    "storm":  (("wxl_storm", "wxl_storm"),             ("wx_storm", "wx_storm")),
+    "rain":   (("wxl_rain", "wxl_rain"),               ("wx_rain", "wx_rain")),
+    "snow":   (("wxl_snow", "wxl_snow"),               ("wx_snow", "wx_snow")),
+    "fog":    (("wxl_fog", "wxl_fog"),                 ("wx_fog", "wx_fog")),
+    "cloud":  (("wxl_cloud", "wxl_cloud"),             ("wx_cloud", "wx_cloud")),
+    "partly": (("wxl_partly_day", "wxl_partly_night"), ("wx_partly", "wx_partly")),
+    "wind":   (("wxl_wind", "wxl_wind"),               ("wx_wind", "wx_wind")),
+    "clear":  (("wxl_sun", "wxl_moon"),                ("wx_sun", "wx_moon")),
+}
 
 
 def weather_cases(src, isday=None, big=False):
     """[(expression, resource)] for a condition source. isday=None means daytime only."""
-    out = []
-    for codes, big_res, small_res in WEATHER:
-        day, night = big_res if big else small_res
-        e = any_of(src, codes)
-        if isday and day != night:
-            out.append((f"{e} &amp;&amp; {isday}", day))
-            out.append((e, night))
-        else:
-            out.append((e, day))
-    return out
+    return wff.weather_cases(src, lambda k: WEATHER[k][0 if big else 1], isday)
 
 
 # Lower block
@@ -141,30 +126,12 @@ BATT_ARC = dict(r=202, a0=154, a1=206)
 DROPS = [(150, 0.9), (172, 1.1), (196, 0.8), (218, 1.0), (240, 0.95), (262, 1.15), (284, 0.85), (306, 1.05)]
 
 
-def ind(s, n):
-    pad = " " * n
-    return "".join(pad + line if line.strip() else line for line in s.splitlines(True))
-
-
-def esc(t):
-    return t.replace("&", "&amp;").replace("<", "&lt;")
-
-
 def font(size, color, body, extra=""):
-    return f'<Font family="{FONT}" size="{size}" color="{color}"{extra}>{body}</Font>'
-
-
-def tmpl(template, params):
-    if not params:
-        return esc(template)
-    p = "".join(f'<Parameter expression="{e}"/>' for e in params)
-    return f"<Template>{esc(template)}{p}</Template>"
+    return wff.font(FONT, size, color, body, extra)
 
 
 def text(x, y, w, h, body, size, color=WHITE, align="CENTER"):
-    return (f'<PartText x="{x}" y="{y}" width="{w}" height="{h}">\n'
-            f'  <Text align="{align}" ellipsis="TRUE">{font(size, color, body)}</Text>\n'
-            f'</PartText>\n')
+    return wff.text(FONT, x, y, w, h, body, size, color, align)
 
 
 def ctext(ring, a0, a1, body, size, color, align):
@@ -177,14 +144,6 @@ def ctext(ring, a0, a1, body, size, color, align):
             f'</PartText>\n')
 
 
-def cond(exprs, cases, default=""):
-    """exprs: [(name, expr)], cases: [(name, body)]"""
-    e = "".join(f'    <Expression name="{n}">{x}</Expression>\n' for n, x in exprs)
-    cs = "".join(f'  <Compare expression="{n}">\n' + ind(b, 4) + '  </Compare>\n' for n, b in cases)
-    d = ('  <Default>\n' + ind(default, 4) + '  </Default>\n') if default else ""
-    return '<Condition>\n  <Expressions>\n' + e + '  </Expressions>\n' + cs + d + '</Condition>\n'
-
-
 def outline_pill(x, y, w, h, color, thickness=1.5, fill=None):
     r = h / 2 - 1
     f = f'\n    <Fill color="{fill}"/>' if fill else ""
@@ -193,13 +152,6 @@ def outline_pill(x, y, w, h, color, thickness=1.5, fill=None):
             f'    <Stroke color="{color}" thickness="{thickness}"/>\n'
             f'  </RoundRectangle>\n'
             f'</PartDraw>\n')
-
-
-def image(x, y, w, h, res, tint=None, extra=""):
-    t = f' tintColor="{tint}"' if tint else ""
-    return (f'<PartImage x="{x}" y="{y}" width="{w}" height="{h}"{t}{extra}>\n'
-            f'  <Image resource="{res}"/>\n'
-            f'</PartImage>\n')
 
 
 # ---- Ring text --------------------------------------------------------------------
@@ -280,7 +232,7 @@ def weather_art():
     arts = weather_cases("[WEATHER.CONDITION]", "[WEATHER.IS_DAY]", big=True)
     cases = [(f"a{i}", image(x, y, w, h, res)) for i, (_, res) in enumerate(arts)]
     inner = cond([(f"a{i}", e) for i, (e, _) in enumerate(arts)], cases, image(x, y, w, h, "wxl_unknown"))
-    return cond([("wx", f"{WX} &amp;&amp; !([WEATHER.IS_ERROR])")], [("wx", inner)],
+    return cond([("wx", wff.WX_OK)], [("wx", inner)],
                 image(x, y, w, h, "wxl_unknown"))
 
 
@@ -346,12 +298,8 @@ def clock_boxes(size, fmt_groups, cy):
 def clock(size, fmt_groups, color, cy):
     boxes = clock_boxes(size, fmt_groups, cy)
     colons = "".join(text(x, y, w, h, ":", size, color) for f, x, y, w, h in boxes if f == ":")
-    digits = "".join(f'  <TimeText format="{f}" hourFormat="SYNC_TO_DEVICE" align="CENTER" '
-                     f'x="{x}" y="{y}" width="{w}" height="{h}">\n'
-                     f'    <Font family="{FONT}" size="{size}" color="{color}"/>\n'
-                     f'  </TimeText>\n' for f, x, y, w, h in boxes if f != ":")
-    # one DigitalClock for all digits (one time binding instead of one per digit)
-    return colons + '<DigitalClock x="0" y="0" width="450" height="450">\n' + digits + '</DigitalClock>\n'
+    digits = "".join(wff.time_text(f, x, y, w, h, FONT, size, color) for f, x, y, w, h in boxes if f != ":")
+    return colons + wff.digital_clock(digits)
 
 
 HM = [("hh_10", "hh_1"), ("mm_10", "mm_1")]
@@ -389,15 +337,8 @@ def battery():
 
 
 # ---- Complications --------------------------------------------------------------------
-RANGE = "([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN])"
-GOAL = "[COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE]"
-CTEXT = tmpl("%s", ["[COMPLICATION.TEXT]"])
-MONO = "[COMPLICATION.MONOCHROMATIC_IMAGE]"
-
-
 def text_or_value(x, y, w, h, size, value):
-    return cond([("t", "textLength([COMPLICATION.TEXT]) &gt; 0")], [("t", text(x, y, w, h, CTEXT, size))],
-                text(x, y, w, h, tmpl("%d", [f"round({value})"]), size))
+    return wff.text_or_value(FONT, x, y, w, h, size, WHITE, value)
 
 
 def bar(x, y, w, frac):
@@ -421,7 +362,7 @@ def side_slot(sid, name, cx, cy, provider, ptype):
         "SMALL_IMAGE": image((W - 38) // 2, (H - 38) // 2, 38, 38, "[COMPLICATION.SMALL_IMAGE]"),
         "EMPTY": "",
     }
-    return slot_xml(sid, name, cx - W // 2, cy - H // 2, W, H, types, provider, ptype, parts)
+    return wff.slot_xml(sid, name, cx - W // 2, cy - H // 2, W, H, types, provider, ptype, parts)
 
 
 def pill_slot(sid, name, provider, ptype):
@@ -434,19 +375,7 @@ def pill_slot(sid, name, provider, ptype):
         "MONOCHROMATIC_IMAGE": image(4, 5, 22, 22, MONO, c(2)),
         "EMPTY": "",
     }
-    return slot_xml(sid, name, x, y, W, H, types, provider, ptype, parts)
-
-
-def slot_xml(sid, name, x, y, W, H, types, provider, ptype, parts):
-    out = (f'<ComplicationSlot slotId="{sid}" displayName="{name}" x="{x}" y="{y}" width="{W}" height="{H}" '
-           f'isCustomizable="TRUE" supportedTypes="{types}">\n'
-           f'  <DefaultProviderPolicy defaultSystemProvider="{provider}" defaultSystemProviderType="{ptype}"/>\n'
-           f'  <BoundingRoundBox x="0" y="0" width="{W}" height="{H}" cornerRadius="{min(W, H) // 2}"/>\n'
-           f'  <Variant mode="AMBIENT" target="alpha" value="0"/>\n')
-    for t in types.split():
-        b = parts[t]
-        out += (f'  <Complication type="{t}">\n' + ind(b, 4) + '  </Complication>\n') if b else f'  <Complication type="{t}"/>\n'
-    return out + '</ComplicationSlot>\n'
+    return wff.slot_xml(sid, name, x, y, W, H, types, provider, ptype, parts)
 
 
 # ---- Always-on ---------------------------------------------------------------------------
@@ -456,9 +385,8 @@ DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]   # WFF DAY_OF_WEEK: 1 
 
 
 def forecast_block(cx, y, cond_expr, isday, hi_tmpl, hi_params, label_body, avail):
-    icons = weather_cases(cond_expr, isday)
-    ic = cond([(f"i{i}", e) for i, (e, _) in enumerate(icons)],
-              [(f"i{i}", image(cx - 14, y, 28, 28, r, AOD_GREY)) for i, (_, r) in enumerate(icons)])
+    ic = wff.weather_switch(cond_expr, lambda k: WEATHER[k][1], lambda r: image(cx - 14, y, 28, 28, r, AOD_GREY),
+                            isday=isday)
     temps = text(cx - 45, y + 30, 90, 28, tmpl(hi_tmpl, hi_params), 24, AOD_GREY)
     lab = (outline_pill(cx - 28, y + 61, 56, 24, AOD_DIM)
            + (text(cx - 28, y + 62, 56, 22, label_body, 16, AOD_GREY) if label_body else ""))
@@ -497,15 +425,11 @@ def ambient():
 
 # ---- Settings ------------------------------------------------------------------------------
 def user_configs():
-    colors = "".join(f'<ColorOption id="{i}" displayName="{n}" colors="{" ".join(cs)}"/>\n'
-                     for i, (_, n, cs) in enumerate(THEMES))
     lists = ""
     for pid, name, _, _, default in POSITIONS:
         opts = "".join(f'  <ListOption id="{o[0]}" displayName="{o[1]}"/>\n' for o in OPTIONS)
         lists += f'<ListConfiguration id="{pid}" displayName="{name}" defaultValue="{default}">\n{opts}</ListConfiguration>\n'
-    return ('<UserConfigurations>\n'
-            '  <ColorConfiguration id="theme" displayName="cfg_theme" defaultValue="0">\n' + ind(colors, 4) +
-            '  </ColorConfiguration>\n'
+    return ('<UserConfigurations>\n' + ind(wff.color_config(THEMES), 2) +
             '  <BooleanConfiguration id="seconds" displayName="cfg_seconds" defaultValue="FALSE"/>\n'
             '  <BooleanConfiguration id="motion" displayName="cfg_motion" defaultValue="FALSE"/>\n'
             + ind(lists, 2) +
@@ -521,20 +445,9 @@ def main():
     active = (bands()
               + "".join(ring_position(p[0], p[2], p[3], p[4]) for p in POSITIONS)
               + weather_art() + motion() + pill() + time_block() + battery())
-    scene = ('<Group name="active" x="0" y="0" width="450" height="450">\n'
-             '  <Variant mode="AMBIENT" target="alpha" value="0"/>\n' + ind(active, 2) + '</Group>\n'
-             '<Group name="ambient" x="0" y="0" width="450" height="450" alpha="0">\n'
-             '  <Variant mode="AMBIENT" target="alpha" value="255"/>\n' + ind(ambient(), 2) + '</Group>\n'
+    scene = (wff.active_only("active", active) + wff.ambient_only("ambient", ambient())
              + "".join(side_slot(*s) for s in SLOTS_SIDE) + pill_slot(*SLOT_PILL))
-    xml = ('<?xml version="1.0" encoding="utf-8"?>\n'
-           '<!-- Nimbus: weather rings digital face. Watch Face Format v2. '
-           'GENERATED by design/gen_watchface.py, do not edit by hand. -->\n'
-           '<WatchFace width="450" height="450" clipShape="CIRCLE">\n'
-           '  <Metadata key="CLOCK_TYPE" value="DIGITAL"/>\n'
-           '  <Metadata key="PREVIEW_TIME" value="10:30:00"/>\n'
-           + ind(user_configs(), 2)
-           + '  <Scene backgroundColor="#FF000000">\n' + ind(scene, 4) + '  </Scene>\n'
-           '</WatchFace>\n')
+    xml = wff.watchface("Nimbus: weather rings digital face.", "10:30:00", user_configs(), scene)
     print(xml, end="")
 
 
