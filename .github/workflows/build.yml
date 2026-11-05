@@ -28,7 +28,7 @@ jobs:
 
       - name: Validate watch face XML against the official WFF schema
         run: |
-          pip install --quiet "xmlschema==4.3.2"
+          pip install --quiet "xmlschema==4.3.2" "pillow==11.3.0"   # pillow: generators measure text
           python3 tools/validate_wff.py
 
       - name: Check generated faces are up to date

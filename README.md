@@ -6,6 +6,7 @@ Each face is its own module under `faces/`, and they share one build, signing an
 | Face | Preview |
 |---|---|
 | [Overlap](faces/overlap/): stacked two-tone digits, curved date, 5 configurable complications, 12 themes, heartbeat and rain animations | <img src="faces/overlap/docs/preview.png" width="220"> |
+| [Nimbus](faces/nimbus/): weather picture that follows the conditions, two configurable data rings, 3 complication slots, 12 themes, forecast on always-on | <img src="faces/nimbus/docs/preview.png" width="220"> |
 
 ## Get the APKs (phone only, no PC)
 

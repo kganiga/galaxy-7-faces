@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Nimbus</string>
+
+    <!-- Settings (Customize screen) -->
+    <string name="cfg_theme">Color theme</string>
+    <string name="cfg_seconds">Show seconds</string>
+    <string name="cfg_motion">Rain and snow motion</string>
+
+    <!-- Ring positions -->
+    <string name="pos_o1">Outer ring, left</string>
+    <string name="pos_o2">Outer ring, top left</string>
+    <string name="pos_o3">Outer ring, top right</string>
+    <string name="pos_o4">Outer ring, right</string>
+    <string name="pos_i1">Inner ring, left</string>
+    <string name="pos_i2">Inner ring, top left</string>
+    <string name="pos_i3">Inner ring, top right</string>
+    <string name="pos_i4">Inner ring, right</string>
+
+    <!-- Ring data choices -->
+    <string name="opt_none">Nothing</string>
+    <string name="opt_steps">Steps</string>
+    <string name="opt_goal">Step goal %</string>
+    <string name="opt_km">Distance (km, estimated)</string>
+    <string name="opt_mi">Distance (mi, estimated)</string>
+    <string name="opt_notif">Unread notifications</string>
+    <string name="opt_hr">Heart rate</string>
+    <string name="opt_uv">UV index</string>
+    <string name="opt_temp">Temperature now, high, low</string>
+    <string name="opt_hilo">Today high and low</string>
+    <string name="opt_rain">Chance of rain</string>
+    <string name="opt_batt">Battery</string>
+
+    <!-- Complication slots -->
+    <string name="slot_left">Left</string>
+    <string name="slot_right">Right</string>
+    <string name="slot_pill">Date pill</string>
+
+    <!-- Themes -->
+    <string name="theme_olive">Olive</string>
+    <string name="theme_steel">Steel</string>
+    <string name="theme_rust">Rust</string>
+    <string name="theme_crimson">Crimson</string>
+    <string name="theme_violet">Violet</string>
+    <string name="theme_plum">Plum</string>
+    <string name="theme_teal">Teal</string>
+    <string name="theme_forest">Forest</string>
+    <string name="theme_navy">Navy</string>
+    <string name="theme_sand">Sand</string>
+    <string name="theme_graphite">Graphite</string>
+    <string name="theme_midnight">Midnight</string>
+</resources>
