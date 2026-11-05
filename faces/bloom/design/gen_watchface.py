@@ -68,8 +68,9 @@ TILE_R = 30
 TITLE_CY, VALUE_CY = 40, 74              # centres of the two text lines inside a tile
 
 # ---- Bottom arc -------------------------------------------------------------------------------
-ARC_R, ARC_T, ARC_DOT = 191, 24, 22
-ARC_A0, ARC_A1 = 270, 90                  # value 0 at 9 o'clock, full at 3 o'clock
+ARC_R, ARC_T = 191, 24
+ARC_A0, ARC_A1 = 270, 90                  # the track runs from 9 to 3 o'clock through 6
+BADGE_W, BADGE_H = 64, 30                 # percentage badge, sitting on the track at 6 o'clock
 ARC_BOX = (21, 212, 408, 217)            # slot box: lower half of the dial
 
 # ---- Second time zone ----------------------------------------------------------------------------
@@ -266,19 +267,20 @@ def arc_slot():
     x, y, W, H = ARC_BOX
     cx, cy = CX - x, CY - y
 
-    def dot(frac):
-        a = f"{ARC_A0} - {ARC_A0 - ARC_A1} * clamp({frac}, 0, 1)"
-        d = 2 * ARC_R
-        return (f'<PartDraw x="0" y="0" width="{W}" height="{H}">\n'
-                f'  <Arc centerX="{cx}" centerY="{cy}" width="{d}" height="{d}" startAngle="{ARC_A0}" endAngle="{ARC_A0 + 1}">\n'
-                f'    <Stroke color="{c(4)}" thickness="{ARC_DOT}" cap="ROUND"/>\n'
-                f'    <Transform target="startAngle" value="{a}"/>\n'
-                f'    <Transform target="endAngle" value="{a} + 1"/>\n'
-                f'  </Arc>\n'
-                f'</PartDraw>\n')
+    def badge(frac):
+        """Value as a whole percentage in a pill on the bottom of the track."""
+        bx, by = round(cx - BADGE_W / 2), round(cy + ARC_R - BADGE_H / 2)
+        r = BADGE_H / 2
+        pct = tmpl("%d", [f"round(100 * clamp({frac}, 0, 1))"]) + "%"
+        return (f'<PartDraw x="{bx}" y="{by}" width="{BADGE_W}" height="{BADGE_H}">\n'
+                f'  <RoundRectangle x="0" y="0" width="{BADGE_W}" height="{BADGE_H}" cornerRadiusX="{r}" cornerRadiusY="{r}">\n'
+                f'    <Fill color="{c(4)}"/>\n'
+                f'  </RoundRectangle>\n'
+                f'</PartDraw>\n'
+                + text(bx, by, BADGE_W, BADGE_H, pct, 20, c(1)))
     bound = (f'<BoundingArc centerX="{cx}" centerY="{cy}" width="{2 * ARC_R}" height="{2 * ARC_R}" '
              f'thickness="{ARC_T + 16}" startAngle="{ARC_A1}" endAngle="{ARC_A0}" isRoundEdge="TRUE"/>')
-    parts = {"RANGED_VALUE": dot(RANGE), "GOAL_PROGRESS": dot(GOAL), "EMPTY": ""}
+    parts = {"RANGED_VALUE": badge(RANGE), "GOAL_PROGRESS": badge(GOAL), "EMPTY": ""}
     return wff.slot_xml(4, "slot_arc", x, y, W, H, "RANGED_VALUE GOAL_PROGRESS EMPTY",
                         "WATCH_BATTERY", "RANGED_VALUE", parts, bound)
 

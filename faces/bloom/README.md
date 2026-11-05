@@ -20,7 +20,7 @@ and a progress arc along the bottom. 12 color themes.
 | Right pod (complication) | same. **Empty = date** (weekday + day) | Empty |
 | Bottom left tile (complication) | same | Steps |
 | Bottom right tile (complication) | same. **Empty = second time zone** | Empty |
-| Bottom arc (complication) | ranged value or goal, shown as a dot along the arc | Watch battery |
+| Bottom arc (complication) | ranged value or goal, shown as a percentage badge at the bottom of the arc | Watch battery |
 
 **How the dual clock works.** The bottom right tile is a normal complication slot. While it is
 empty it shows the city and time from the *Second time zone* setting (12 or 24 h, following the

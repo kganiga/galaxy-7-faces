@@ -102,10 +102,12 @@ def render(theme=0, sample="08:57", weather="wx_moon", city=("London", "4:27 PM"
     d = ImageDraw.Draw(im)
     line(d, x1 + T / 2, g.TILE_Y + g.TITLE_CY, T - 8, city[0], 21, cs[1])
     line(d, x1 + T / 2, g.TILE_Y + g.VALUE_CY, T - 8, city[1], 20, cs[1])
-    # arc dot
-    x, y = preview_point(g.ARC_R, g.ARC_A0 - (g.ARC_A0 - g.ARC_A1) * frac)
-    rr = g.ARC_DOT / 2 * SS
-    d.ellipse((x - rr, y - rr, x + rr, y + rr), fill=cs[4])
+    # arc percentage badge at 6 o'clock
+    by = g.CY + g.ARC_R
+    bw, bh = g.BADGE_W, g.BADGE_H
+    d.rounded_rectangle(((g.CX - bw / 2) * SS, (by - bh / 2) * SS, (g.CX + bw / 2) * SS, (by + bh / 2) * SS),
+                        radius=bh / 2 * SS, fill=cs[4])
+    line(d, g.CX, by, bw, f"{round(frac * 100)}%", 20, cs[1])
     return preview.finish(im, SS)
 
 

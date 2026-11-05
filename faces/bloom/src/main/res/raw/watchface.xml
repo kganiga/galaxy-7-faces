@@ -1062,22 +1062,24 @@
       <BoundingArc centerX="204" centerY="13" width="382" height="382" thickness="40" startAngle="90" endAngle="270" isRoundEdge="TRUE"/>
       <Variant mode="AMBIENT" target="alpha" value="0"/>
       <Complication type="RANGED_VALUE">
-        <PartDraw x="0" y="0" width="408" height="217">
-          <Arc centerX="204" centerY="13" width="382" height="382" startAngle="270" endAngle="271">
-            <Stroke color="[CONFIGURATION.theme.4]" thickness="22" cap="ROUND"/>
-            <Transform target="startAngle" value="270 - 180 * clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1)"/>
-            <Transform target="endAngle" value="270 - 180 * clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) + 1"/>
-          </Arc>
+        <PartDraw x="172" y="189" width="64" height="30">
+          <RoundRectangle x="0" y="0" width="64" height="30" cornerRadiusX="15.0" cornerRadiusY="15.0">
+            <Fill color="[CONFIGURATION.theme.4]"/>
+          </RoundRectangle>
         </PartDraw>
+        <PartText x="172" y="189" width="64" height="30">
+          <Text align="CENTER" ellipsis="TRUE"><Font family="gsf_text" size="20" color="[CONFIGURATION.theme.1]"><Template>%d<Parameter expression="round(100 * clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1))"/></Template>%</Font></Text>
+        </PartText>
       </Complication>
       <Complication type="GOAL_PROGRESS">
-        <PartDraw x="0" y="0" width="408" height="217">
-          <Arc centerX="204" centerY="13" width="382" height="382" startAngle="270" endAngle="271">
-            <Stroke color="[CONFIGURATION.theme.4]" thickness="22" cap="ROUND"/>
-            <Transform target="startAngle" value="270 - 180 * clamp([COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE], 0, 1)"/>
-            <Transform target="endAngle" value="270 - 180 * clamp([COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE], 0, 1) + 1"/>
-          </Arc>
+        <PartDraw x="172" y="189" width="64" height="30">
+          <RoundRectangle x="0" y="0" width="64" height="30" cornerRadiusX="15.0" cornerRadiusY="15.0">
+            <Fill color="[CONFIGURATION.theme.4]"/>
+          </RoundRectangle>
         </PartDraw>
+        <PartText x="172" y="189" width="64" height="30">
+          <Text align="CENTER" ellipsis="TRUE"><Font family="gsf_text" size="20" color="[CONFIGURATION.theme.1]"><Template>%d<Parameter expression="round(100 * clamp([COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE], 0, 1))"/></Template>%</Font></Text>
+        </PartText>
       </Complication>
       <Complication type="EMPTY"/>
     </ComplicationSlot>
